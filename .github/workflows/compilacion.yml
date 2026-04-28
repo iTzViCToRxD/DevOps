@@ -1,0 +1,43 @@
+name: Build and Package .NET 9 Solution
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+    branches:
+      - main
+      - dev
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Descargar Repositorio
+        uses: actions/checkout@v4
+
+      - name: Instalar .NET 9
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restaurar Dependencias
+        run: dotnet restore MiSolucion.slnx
+
+      - name: Proceso de Compilacion
+        run: dotnet build DevOpsService.slnx --configuration Release --no-restore
+
+      - name: Proceso de Publicacion
+        run: dotnet publish DevOps/DevOps.csproj --configuration Release --output ./publish --no-build
+
+      - name: Compresion de Publicacion
+        run: Compress-Archive -Path ./publish/* -DestinationPath ./artifact/artefacto.zip
+
+      - name: Subir Artefacto
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-package
+          path: ./artifact/artefacto.zip
