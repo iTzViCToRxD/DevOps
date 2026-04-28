@@ -39,12 +39,11 @@ jobs:
           mkdir -p extraido
           Expand-Archive -Path ".\descarga\artefacto.zip" -DestinationPath ".\extraido" -Force
 
-      - name: Login
-        shell: powershell
-        env:
-          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
-        run: |
-          $env:DOCKERHUB_TOKEN | docker login -u itzvictorxd --password-stdin
+      - name: Login Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Crear Imagen
         shell: powershell
