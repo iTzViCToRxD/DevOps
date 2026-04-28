@@ -1,0 +1,36 @@
+name: Publicacion Imagen
+
+on:
+  workflow_run:
+    workflows: [Compilacion DevOps]
+    types: [completed]
+    branches: [main, dev]
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  download-and-extract:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: self-hosted
+
+    steps:
+      - name: Descargar Artefacto
+        uses: actions/download-artifact@v4
+        with:
+          name: app-package
+          path: descarga
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Show downloaded files
+        run: ls -la descarga
+
+      - name: Extract inner zip
+        run: |
+          mkdir -p extraido
+          unzip descarga/artefacto.zip -d extraido
+
+      - name: Show extracted files
+        run: ls -la extraido
