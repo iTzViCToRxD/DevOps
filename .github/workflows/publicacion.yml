@@ -34,10 +34,17 @@ jobs:
           run-id: ${{ github.event.workflow_run.id }}
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Show downloaded files
-        run: ls -l descarga
-
       - name: Extraer artefactos
         run: |
           mkdir -p extraido
           Expand-Archive -Path ".\descarga\artefacto.zip" -DestinationPath ".\extraido" -Force
+
+      - name: Crear Imagen
+        shell: powershell
+        run: |
+          docker build -t itzvictorxd/devops-api:1.0 .
+
+      - name: Publicar Imagen
+        shell: powershell
+        run: |
+          docker push itzvictorxd/devops-api:1.0
