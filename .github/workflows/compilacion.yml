@@ -25,7 +25,7 @@ jobs:
           docker build --target publish-artifacts --output type=local,dest=.\publish .
 
       - name: Compresion de Publicacion
-        run: Compress-Archive -Path ./publish/* -DestinationPath ./artifact/artefacto.zip
+        run: Compress-Archive -Path ./publish/* -DestinationPath ./artefacto.zip
 
       - name: Subir Artefacto
         uses: actions/upload-artifact@v4
