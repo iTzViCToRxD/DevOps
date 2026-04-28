@@ -1,4 +1,4 @@
-name: Build and Package .NET 9 Solution
+name: Compilacion DevOps
 
 on:
   push:
@@ -13,25 +13,16 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+    runs-on: self-hosted
 
     steps:
       - name: Descargar Repositorio
         uses: actions/checkout@v4
 
-      - name: Instalar .NET 9
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '9.0.x'
-
-      - name: Restaurar Dependencias
-        run: dotnet restore DevOpsService.slnx
-
-      - name: Proceso de Compilacion
-        run: dotnet build DevOpsService.slnx --configuration Release --no-restore
-
-      - name: Proceso de Publicacion
-        run: dotnet publish DevOps/DevOps.csproj --configuration Release --output ./publish --no-build
+      - name: Compilacion Docker
+        shell: powershell
+        run: |
+          docker build --target publish-artifacts --output type=local,dest=.\publish .
 
       - name: Compresion de Publicacion
         run: Compress-Archive -Path ./publish/* -DestinationPath ./artifact/artefacto.zip
