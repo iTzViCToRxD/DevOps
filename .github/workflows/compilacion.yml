@@ -25,7 +25,7 @@ jobs:
           dotnet-version: '9.0.x'
 
       - name: Restaurar Dependencias
-        run: dotnet restore MiSolucion.slnx
+        run: dotnet restore DevOpsService.slnx
 
       - name: Proceso de Compilacion
         run: dotnet build DevOpsService.slnx --configuration Release --no-restore
