@@ -54,6 +54,7 @@ jobs:
         
                 # Copiamos primero a staging para evitar bloqueos transitorios en ./publish
                 Copy-Item -Path (Join-Path $publishPath "*") -Destination $stagingPath -Recurse -Force -ErrorAction Stop
+                Copy-Item .\Dockerfile -Destination $stagingPath -Recurse -Force -ErrorAction Stop
         
                 Compress-Archive -Path (Join-Path $stagingPath "*") -DestinationPath $zipPath -CompressionLevel Optimal -Force -ErrorAction Stop
                 Write-Host "Compresion completada en intento $i."
