@@ -22,9 +22,7 @@ jobs:
     steps:
       - name: Limpiar Workspace
         run: |
-          rm -rf "$GITHUB_WORKSPACE"/*
-          rm -rf "$GITHUB_WORKSPACE"/.[!.]*
-          rm -rf "$GITHUB_WORKSPACE"/..?*
+          Remove-Item "$env:GITHUB_WORKSPACE\*" -Recurse -Force -ErrorAction SilentlyContinue
 
       - name: Descargar Repositorio
         uses: actions/checkout@v4
