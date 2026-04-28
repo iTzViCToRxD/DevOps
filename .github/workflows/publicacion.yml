@@ -16,6 +16,12 @@ jobs:
     runs-on: self-hosted
 
     steps:
+      - name: Limpiar Workspace
+        run: |
+          rm -rf "$GITHUB_WORKSPACE"/*
+          rm -rf "$GITHUB_WORKSPACE"/.[!.]*
+          rm -rf "$GITHUB_WORKSPACE"/..?*
+
       - name: Descargar Artefacto
         uses: actions/download-artifact@v4
         with:
@@ -25,7 +31,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Show downloaded files
-        run: ls -la descarga
+        run: ls -l descarga
 
       - name: Extract inner zip
         run: |
@@ -33,4 +39,4 @@ jobs:
           unzip descarga/artefacto.zip -d extraido
 
       - name: Show extracted files
-        run: ls -la extraido
+        run: ls -l extraido
