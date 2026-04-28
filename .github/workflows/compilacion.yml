@@ -5,10 +5,14 @@ on:
     branches:
       - main
       - dev
+    paths:
+      - 'DevOps/**'
   pull_request:
     branches:
       - main
       - dev
+    paths:
+      - 'DevOps/**'
   workflow_dispatch:
 
 jobs:
