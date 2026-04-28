@@ -20,6 +20,12 @@ jobs:
     runs-on: self-hosted
 
     steps:
+      - name: Limpiar Workspace
+        run: |
+          rm -rf "$GITHUB_WORKSPACE"/*
+          rm -rf "$GITHUB_WORKSPACE"/.[!.]*
+          rm -rf "$GITHUB_WORKSPACE"/..?*
+
       - name: Descargar Repositorio
         uses: actions/checkout@v4
 
