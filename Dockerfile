@@ -15,5 +15,5 @@ COPY --from=build /app/publish/ /
 # Para run
 FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS runtime
 WORKDIR /app
-COPY --from=build /app/publish .
+COPY . .
 ENTRYPOINT ["dotnet", "DevOps.dll"]
