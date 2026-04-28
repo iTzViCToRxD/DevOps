@@ -42,7 +42,7 @@ jobs:
       - name: Crear Imagen
         shell: powershell
         run: |
-          docker build -t itzvictorxd/devops-api:1.0 .
+          docker build -f ./DevOps/DevOps/extraido/Dockerfile -t itzvictorxd/devops-api:1.0 .
 
       - name: Publicar Imagen
         shell: powershell
