@@ -37,10 +37,7 @@ jobs:
       - name: Show downloaded files
         run: ls -l descarga
 
-      - name: Extract inner zip
+      - name: Extraer artefactos
         run: |
           mkdir -p extraido
-          unzip descarga/artefacto.zip -d extraido
-
-      - name: Show extracted files
-        run: ls -l extraido
+          Expand-Archive -Path ".\descarga\artefacto.zip" -DestinationPath ".\extraido" -Force
