@@ -48,7 +48,7 @@ jobs:
       - name: Crear Imagen
         shell: powershell
         run: |
-          docker build -f .\extraido\Dockerfile -t itzvictorxd/devops-api:1.0 .
+          docker build --target runtime -f .\extraido\Dockerfile -t itzvictorxd/devops-api:1.0 .
 
       - name: Publicar Imagen
         shell: powershell
