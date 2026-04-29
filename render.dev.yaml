@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: devops-api-dev
+    runtime: image
+    plan: free
+    region: ohio
+
+    image:
+      url: docker.io/itzvictorxd/devops-api:dev
+
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+
+      - key: PORT
+        value: 8080
