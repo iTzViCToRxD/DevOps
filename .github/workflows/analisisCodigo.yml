@@ -1,0 +1,55 @@
+name: Analisis DevOps - Hosted
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+    paths:
+      - 'DevOps/**'
+  pull_request:
+    branches:
+      - main
+      - dev
+    paths:
+      - 'DevOps/**'
+  workflow_dispatch:
+
+jobs:
+  analyze:
+    name: Analyze
+    runs-on: ubuntu-latest
+
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language:
+          - csharp
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 9.0.x
+
+      - name: Inicializar CodeQL
+        uses: github/codeql-action/init@v3
+        with:
+          languages: ${{ matrix.language }}
+
+      - name: Restaurar Dependencias
+        run: dotnet restore
+
+      - name: Compilacion
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Analizis de Codigo
+        uses: github/codeql-action/analyze@v3
