@@ -25,4 +25,4 @@ jobs:
 
       - name: Ejecutar Test
         run: |
-          dotnet test ./DevOps/DevOps.Tests/DevOps.Tests.csproj --configuration Release
+          dotnet test ./DevOps.Tests/DevOps.Test.csproj --configuration Release
