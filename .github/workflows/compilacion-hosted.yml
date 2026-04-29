@@ -25,6 +25,9 @@ jobs:
       - name: Descargar Repositorio
         uses: actions/checkout@v4
 
+      - name: Configurar Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Compilacion Docker
         shell: powershell
         run: |
