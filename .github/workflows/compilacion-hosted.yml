@@ -33,6 +33,10 @@ jobs:
           target: publish-artifacts
           outputs: type=local,dest=./publish
 
+      - name: Copiar archivo extra
+        run: |
+          cp Dockerfile ./publish/
+
       - name: Comprimir Publicacion
         run: |
           cd publish
