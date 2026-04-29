@@ -1,0 +1,28 @@
+name: Test DevOps - Hosted
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+    paths:
+      - 'DevOps/**'
+  pull_request:
+    branches:
+      - main
+      - dev
+    paths:
+      - 'DevOps/**'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Descargar Repositorio
+        uses: actions/checkout@v4
+
+      - name: Ejecutar Test
+        run: |
+          dotnet test DevOps.Tests/DevOps.Tests.csproj --configuration Release
