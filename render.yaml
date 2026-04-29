@@ -6,7 +6,7 @@ services:
     region: ohio
 
     image:
-      url: docker.io/itzvictorxd/devops-api:1.0
+      url: docker.io/itzvictorxd/devops-api:main
 
     envVars:
       - key: ASPNETCORE_ENVIRONMENT
