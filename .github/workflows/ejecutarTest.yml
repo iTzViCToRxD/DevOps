@@ -7,22 +7,40 @@ on:
       - dev
     paths:
       - 'DevOps/**'
+      - 'DevOps.Test/**'
+      - 'DevOpsService.slnx'
   pull_request:
     branches:
       - main
       - dev
     paths:
       - 'DevOps/**'
+      - 'DevOps.Test/**'
+      - 'DevOpsService.slnx'
   workflow_dispatch:
 
 jobs:
-  build:
+  test:
     runs-on: windows-latest
 
     steps:
       - name: Descargar Repositorio
         uses: actions/checkout@v4
 
+      - name: Configurar .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restaurar Dependencias
+        run: dotnet restore ./DevOpsService.slnx
+
       - name: Ejecutar Test
-        run: |
-          dotnet test ./DevOps.Tests/DevOps.Test.csproj --configuration Release
+        run: dotnet test ./DevOps.Test/DevOps.Test.csproj --configuration Release --no-restore --logger "trx;LogFileName=TestResults.trx"
+
+      - name: Subir Resultado de Tests
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: '**/TestResults.trx'
