@@ -17,9 +17,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
-    env:
-      DOCKER_BUILDKIT: 1
+    runs-on: ubuntu-latest
 
     steps:
       - name: Descargar Repositorio
@@ -35,40 +33,10 @@ jobs:
           target: publish-artifacts
           outputs: type=local,dest=./publish
 
-      - name: Compresion de Publicacion
-        shell: powershell
+      - name: Comprimir Publicacion
         run: |
-            $publishPath = Resolve-Path .\publish
-            $zipPath = Join-Path (Get-Location) "artefacto.zip"
-            $stagingPath = Join-Path $env:RUNNER_TEMP "publish-staging"
-            $maxRetries = 8
-        
-            for ($i = 1; $i -le $maxRetries; $i++) {
-              try {
-                if (Test-Path $zipPath) {
-                  Remove-Item $zipPath -Force
-                }
-        
-                if (Test-Path $stagingPath) {
-                  Remove-Item $stagingPath -Recurse -Force
-                }
-        
-                New-Item -ItemType Directory -Path $stagingPath | Out-Null
-        
-                # Copiamos primero a staging para evitar bloqueos transitorios en ./publish
-                Copy-Item -Path (Join-Path $publishPath "*") -Destination $stagingPath -Recurse -Force -ErrorAction Stop
-                Copy-Item .\Dockerfile -Destination $stagingPath -Recurse -Force -ErrorAction Stop
-        
-                Compress-Archive -Path (Join-Path $stagingPath "*") -DestinationPath $zipPath -CompressionLevel Optimal -Force -ErrorAction Stop
-                Write-Host "Compresion completada en intento $i."
-                break
-              }
-              catch {
-                if ($i -eq $maxRetries) { throw }
-                Write-Host "Intento $i fallido por bloqueo de archivos. Reintentando..."
-                Start-Sleep -Seconds 3
-              }
-            }
+          cd publish
+          zip -r ../artefacto.zip .
 
       - name: Subir Artefacto
         uses: actions/upload-artifact@v4
