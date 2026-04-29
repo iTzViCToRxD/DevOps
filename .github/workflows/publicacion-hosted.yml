@@ -51,14 +51,14 @@ jobs:
           context: ./extraido
           file: ./extraido/Dockerfile
           target: runtime
-          tags: itzvictorxd/devops-api:1.0
+          tags: itzvictorxd/devops-api:${{ github.ref_name }}
           load: true
-
+      
       - name: Publicar Imagen
         uses: docker/build-push-action@v6
         with:
           context: ./extraido
           file: ./extraido/Dockerfile
           target: runtime
-          tags: itzvictorxd/devops-api:1.0
+          tags: itzvictorxd/devops-api:${{ github.ref_name }}
           push: true
