@@ -1,0 +1,20 @@
+name: Deploy Render - PRD
+
+on:
+  workflow_run:
+    workflows: [Publicacion Imagen - Hosted]
+    types: [completed]
+    branches: [main]
+
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: windows-latest
+
+    steps:
+    
+      - name: Deploy en Render
+        shell: powershell
+        run: |
+          Invoke-RestMethod -Uri "${{ secrets.RENDER_DEPLOY_HOOK }}" -Method POST
