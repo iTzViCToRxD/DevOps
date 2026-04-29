@@ -13,4 +13,4 @@ services:
         value: Production
 
       - key: PORT
-        value: 10000
+        value: 8080
