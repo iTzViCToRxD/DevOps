@@ -29,14 +29,46 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Compilacion Docker
-        shell: powershell
-        run: |
-          docker build --target publish-artifacts --output type=local,dest=.\publish .
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          target: publish-artifacts
+          outputs: type=local,dest=./publish
 
       - name: Compresion de Publicacion
         shell: powershell
         run: |
-          # tu script actual aquí
+            $publishPath = Resolve-Path .\publish
+            $zipPath = Join-Path (Get-Location) "artefacto.zip"
+            $stagingPath = Join-Path $env:RUNNER_TEMP "publish-staging"
+            $maxRetries = 8
+        
+            for ($i = 1; $i -le $maxRetries; $i++) {
+              try {
+                if (Test-Path $zipPath) {
+                  Remove-Item $zipPath -Force
+                }
+        
+                if (Test-Path $stagingPath) {
+                  Remove-Item $stagingPath -Recurse -Force
+                }
+        
+                New-Item -ItemType Directory -Path $stagingPath | Out-Null
+        
+                # Copiamos primero a staging para evitar bloqueos transitorios en ./publish
+                Copy-Item -Path (Join-Path $publishPath "*") -Destination $stagingPath -Recurse -Force -ErrorAction Stop
+                Copy-Item .\Dockerfile -Destination $stagingPath -Recurse -Force -ErrorAction Stop
+        
+                Compress-Archive -Path (Join-Path $stagingPath "*") -DestinationPath $zipPath -CompressionLevel Optimal -Force -ErrorAction Stop
+                Write-Host "Compresion completada en intento $i."
+                break
+              }
+              catch {
+                if ($i -eq $maxRetries) { throw }
+                Write-Host "Intento $i fallido por bloqueo de archivos. Reintentando..."
+                Start-Sleep -Seconds 3
+              }
+            }
 
       - name: Subir Artefacto
         uses: actions/upload-artifact@v4
